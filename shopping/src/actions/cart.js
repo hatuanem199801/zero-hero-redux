@@ -1,4 +1,12 @@
-import { ADD_CART, GET_CART, CART_FAILED, PAYMENT, DELETE_CART } from "./types";
+import {
+  ADD_CART,
+  GET_CART,
+  CART_FAILED,
+  PAYMENT,
+  DELETE_CART,
+  INCREMENT_CART,
+  DECREMENT_CART
+} from "./types";
 
 export const getCart = () => dispatch => {
   const carts = localStorage.getItem("carts") || [];
@@ -56,6 +64,36 @@ export const deleteCart = cart => dispatch => {
     dispatch({
       type: CART_FAILED,
       payload: error
+    });
+  }
+};
+
+export const incrementCart = cart => dispatch => {
+  try {
+    dispatch({
+      type: INCREMENT_CART,
+      payload: cart
+    });
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      type: CART_FAILED,
+      error: error
+    });
+  }
+};
+
+export const decrementCart = cart => dispatch => {
+  try {
+    dispatch({
+      type: DECREMENT_CART,
+      payload: cart
+    });
+  } catch (error) {
+    console.error(error);
+    dispatch({
+      type: CART_FAILED,
+      error: error
     });
   }
 };

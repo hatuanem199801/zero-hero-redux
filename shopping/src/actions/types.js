@@ -4,3 +4,5 @@ export const GET_CART = "GET_CART";
 export const PAYMENT = "PAYMENT";
 export const DELETE_CART = "DELETE_CART";
 export const CART_FAILED = "CART_FAILED";
+export const INCREMENT_CART = "INCREMENT_CART";
+export const DECREMENT_CART = "DECREMENT_CART";

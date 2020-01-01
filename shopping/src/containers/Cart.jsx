@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { payment, deleteCart } from "../actions/cart";
+import {
+  payment,
+  deleteCart,
+  incrementCart,
+  decrementCart
+} from "../actions/cart";
 import PropTypes from "prop-types";
 import CartItem from "../components/CartItem";
 
@@ -11,6 +16,15 @@ class Cart extends Component {
   handleOnPayment = () => {
     this.props.payment();
   };
+
+  handleOnIncrement = cart => {
+    this.props.incrementCart(cart);
+  };
+
+  handleOnDecrement = cart => {
+    this.props.decrementCart(cart);
+  };
+
   render() {
     const cartLoading =
       this.props.carts.length > 0 ? (
@@ -19,7 +33,9 @@ class Cart extends Component {
             <CartItem
               key={cart.id.toString()}
               cart={cart}
-              onClick={this.handleOnDelete}
+              onDelete={this.handleOnDelete}
+              onIncrement={this.handleOnIncrement}
+              onDecrement={this.handleOnDecrement}
             />
           ))}
         </ul>
@@ -64,7 +80,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   payment: () => dispatch(payment()),
-  deleteCart: cart => dispatch(deleteCart(cart))
+  deleteCart: cart => dispatch(deleteCart(cart)),
+  incrementCart: cart => dispatch(incrementCart(cart)),
+  decrementCart: cart => dispatch(decrementCart(cart))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart);

@@ -3,7 +3,9 @@ import {
   GET_CART,
   CART_FAILED,
   PAYMENT,
-  DELETE_CART
+  DELETE_CART,
+  INCREMENT_CART,
+  DECREMENT_CART
 } from "../actions/types";
 
 const intialState = {
@@ -56,6 +58,32 @@ export default function(state = intialState, action) {
       };
     case DELETE_CART:
       carts = carts.filter(cart => cart.id !== payload.id);
+      localStorage.setItem("carts", JSON.stringify(carts));
+      return {
+        ...state,
+        carts
+      };
+    case INCREMENT_CART:
+      carts = carts.map(cart => {
+        if (cart.id === payload.id) {
+          cart.quantity++;
+        }
+        return cart;
+      });
+      localStorage.setItem("carts", JSON.stringify(carts));
+      return {
+        ...state,
+        carts
+      };
+    case DECREMENT_CART:
+      carts = carts.map(cart => {
+        if (cart.id === payload.id) {
+          if (cart.quantity > 1) {
+            cart.quantity--;
+          }
+        }
+        return cart;
+      });
       localStorage.setItem("carts", JSON.stringify(carts));
       return {
         ...state,
