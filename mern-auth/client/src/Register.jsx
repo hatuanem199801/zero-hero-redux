@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Redirect, Link } from "react-router-dom";
+import { register } from "./actions/user";
+import PropTypes from "prop-types";
 
 class Register extends Component {
   state = {
@@ -21,10 +25,19 @@ class Register extends Component {
       this.state.password.trim().toLocaleLowerCase() ===
         this.state.confirmPassword.trim().toLocaleLowerCase()
     ) {
-      console.log(this.state);
+      this.props.register(this.state);
+      this.setState({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        fullName: ""
+      });
     }
   };
   render() {
+    if (this.props.isAuthenticated) {
+      return <Redirect to="/home" />;
+    }
     return (
       <div className="landing">
         <h1>Register</h1>
@@ -73,7 +86,7 @@ class Register extends Component {
               className="form-control"
             />
           </div>
-          <div className="form-group">
+          <div className="form-group text-center">
             <button
               onClick={this.handleOnSubmit}
               type="submit"
@@ -81,6 +94,7 @@ class Register extends Component {
             >
               Submit
             </button>
+            <Link to="/">back to landing</Link>
           </div>
         </form>
       </div>
@@ -88,4 +102,17 @@ class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes = {
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+const mapDispatchToProps = dispatch => ({
+  register: data => dispatch(register(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

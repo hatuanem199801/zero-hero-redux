@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { Redirect, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { login } from "./actions/user";
+import PropTypes from "prop-types";
 
 class Login extends Component {
   state = {
@@ -13,10 +17,17 @@ class Login extends Component {
   handleOnSubmit = e => {
     e.preventDefault();
     if (this.state.email && this.state.password) {
-      console.log(this.state);
+      this.props.login(this.state);
+      this.setState({
+        email: "",
+        password: ""
+      });
     }
   };
   render() {
+    if (this.props.isAuthenticated) {
+      return <Redirect to="/home" />;
+    }
     return (
       <div className="landing">
         <h1>Login</h1>
@@ -44,14 +55,16 @@ class Login extends Component {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="form-group text-center">
             <button
               onClick={this.handleOnSubmit}
               type="submit"
-              className="btn btn-lg btn-primary"
+              className="btn btn-sm btn-primary w-25"
             >
               Submit
             </button>
+            <hr />
+            <Link to="/">back to landing</Link>
           </div>
         </form>
       </div>
@@ -59,4 +72,17 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+const mapDispatchToProps = dispatch => ({
+  login: data => dispatch(login(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
